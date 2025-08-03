@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meao - Your Cute Dictionary Cat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1 class="app-title">Meao</h1>
+            <p class="app-subtitle">Your friendly dictionary </p>
+        </header>
+
+        <!-- Main Cat Area -->
+        <main class="cat-container">
+            <div class="animated-cat" id="meao-cat">
+                <!-- Cat Head -->
+                <div class="cat-head">
+                    <!-- Ears -->
+                    <div class="ear ear-left"></div>
+                    <div class="ear ear-right"></div>
+                    <div class="ear-inner ear-inner-left"></div>
+                    <div class="ear-inner ear-inner-right"></div>
+                    
+                    <!-- Head shape -->
+                    <div class="head-shape">
+                        <!-- Eyes -->
+                        <div class="eye eye-left">
+                            <div class="pupil"></div>
+                            <div class="eye-blink"></div>
+                        </div>
+                        <div class="eye eye-right">
+                            <div class="pupil"></div>
+                            <div class="eye-blink"></div>
+                        </div>
+                        
+                        <!-- Nose -->
+                        <div class="nose"></div>
+                        
+                        <!-- Mouth -->
+                        <div class="mouth">
+                            <div class="mouth-left"></div>
+                            <div class="mouth-right"></div>
+                        </div>
+                        
+                        <!-- Whiskers -->
+                        <div class="whisker whisker-left-1"></div>
+                        <div class="whisker whisker-left-2"></div>
+                        <div class="whisker whisker-right-1"></div>
+                        <div class="whisker whisker-right-2"></div>
+                    </div>
+                </div>
+                
+                <!-- Cat Body -->
+                <div class="cat-body">
+                    <div class="body-shape"></div>
+                    <div class="paw paw-left"></div>
+                    <div class="paw paw-right"></div>
+                </div>
+                
+                <!-- Cat Tail -->
+                <div class="cat-tail"></div>
+                
+                <div class="cat-glow"></div>
+            </div>
+            
+            <!-- Click hint -->
+            <div class="click-hint" id="click-hint">
+                <p>Click me to start searching! 🐾</p>
+            </div>
+        </main>
+
+        <!-- Search Interface (initially hidden) -->
+        <div class="search-container" id="search-container">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Search for any word...">
+                <button id="search-btn">
+                    <span>🔍</span>
+                </button>
+            </div>
+            
+            <div class="language-toggle">
+                <button class="lang-btn active" data-lang="en">English</button>
+                <button class="lang-btn" data-lang="ja">日本語</button>
+            </div>
+            
+            <div class="history-controls">
+                <button class="history-btn" onclick="window.meaoCat.showHistory()">
+                    <span>📚</span> History
+                </button>
+                <button class="bookmarks-btn" onclick="window.meaoCat.showBookmarks()">
+                    <span>⭐</span> Bookmarks
+                </button>
+            </div>
+        </div>
+
+        <!-- Results area (for future use) -->
+        <div class="results-container" id="results-container">
+            <!-- Dictionary results will appear here -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

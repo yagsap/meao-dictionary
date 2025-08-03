@@ -1,0 +1,1014 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f5f1eb 0%, #e8ddd4 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Header */
+.app-header {
+    margin-bottom: 3rem;
+    animation: fadeInDown 1s ease-out;
+}
+
+.app-title {
+    font-size: 3.5rem;
+    font-weight: 600;
+    color: #8b5a3c;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(139, 90, 60, 0.1);
+}
+
+.app-subtitle {
+    font-size: 1.2rem;
+    color: #a67c5a;
+    font-weight: 300;
+}
+
+/* Cat Container */
+.cat-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem 0;
+}
+
+/* Animated CSS Cat */
+.animated-cat {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    animation: fadeInUp 1.2s ease-out, gentleFloat 4s ease-in-out infinite;
+    display: inline-block;
+    transform-origin: center bottom;
+}
+
+.animated-cat:hover {
+    transform: scale(1.05);
+}
+
+/* Cat Head */
+.cat-head {
+    position: relative;
+    width: 200px;
+    height: 180px;
+    margin: 0 auto;
+}
+
+.head-shape {
+    width: 160px;
+    height: 140px;
+    background: #8b5a3c;
+    border-radius: 50% 50% 45% 45%;
+    position: absolute;
+    top: 40px;
+    left: 20px;
+    box-shadow: 
+        inset 0 -10px 20px rgba(0,0,0,0.1),
+        0 8px 25px rgba(139, 90, 60, 0.2);
+}
+
+/* Ears */
+.ear {
+    position: absolute;
+    width: 40px;
+    height: 50px;
+    background: #8b5a3c;
+    border-radius: 50% 50% 0 0;
+    top: 10px;
+}
+
+.ear-left { left: 30px; transform: rotate(-20deg); }
+.ear-right { right: 30px; transform: rotate(20deg); }
+
+.ear-inner {
+    position: absolute;
+    width: 20px;
+    height: 25px;
+    background: #f4a2a2;
+    border-radius: 50% 50% 0 0;
+    top: 20px;
+}
+
+.ear-inner-left { left: 40px; transform: rotate(-20deg); }
+.ear-inner-right { right: 40px; transform: rotate(20deg); }
+
+/* Eyes */
+.eye {
+    position: absolute;
+    width: 25px;
+    height: 30px;
+    background: #fff;
+    border-radius: 50%;
+    top: 60px;
+    overflow: hidden;
+}
+
+.eye-left { left: 45px; }
+.eye-right { right: 45px; }
+
+.pupil {
+    width: 12px;
+    height: 15px;
+    background: #333;
+    border-radius: 50%;
+    position: absolute;
+    top: 8px;
+    left: 6px;
+    animation: eyeMove 6s ease-in-out infinite;
+}
+
+.eye-blink {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #8b5a3c;
+    transform: scaleY(0);
+    transform-origin: top;
+    animation: blink 4s ease-in-out infinite;
+}
+
+/* Nose */
+.nose {
+    position: absolute;
+    width: 8px;
+    height: 6px;
+    background: #f4a2a2;
+    border-radius: 50% 50% 50% 50%;
+    top: 90px;
+    left: 76px;
+}
+
+/* Mouth */
+.mouth {
+    position: absolute;
+    top: 100px;
+    left: 80px;
+}
+
+.mouth-left, .mouth-right {
+    width: 15px;
+    height: 8px;
+    border: 2px solid #666;
+    border-top: none;
+    border-radius: 0 0 50px 50px;
+    position: absolute;
+    top: 0;
+}
+
+.mouth-left { left: -10px; transform: rotate(-20deg); }
+.mouth-right { right: -10px; transform: rotate(20deg); }
+
+/* Whiskers */
+.whisker {
+    position: absolute;
+    width: 40px;
+    height: 2px;
+    background: #666;
+    border-radius: 2px;
+}
+
+.whisker-left-1 { top: 80px; left: 5px; transform: rotate(-10deg); }
+.whisker-left-2 { top: 95px; left: 8px; transform: rotate(-5deg); }
+.whisker-right-1 { top: 80px; right: 5px; transform: rotate(10deg); }
+.whisker-right-2 { top: 95px; right: 8px; transform: rotate(5deg); }
+
+/* Cat Body */
+.cat-body {
+    position: relative;
+    margin-top: -20px;
+}
+
+.body-shape {
+    width: 120px;
+    height: 80px;
+    background: #8b5a3c;
+    border-radius: 60px 60px 30px 30px;
+    margin: 0 auto;
+    box-shadow: 
+        inset 0 -5px 15px rgba(0,0,0,0.1),
+        0 5px 15px rgba(139, 90, 60, 0.15);
+}
+
+/* Paws */
+.paw {
+    position: absolute;
+    width: 25px;
+    height: 15px;
+    background: #8b5a3c;
+    border-radius: 50%;
+    bottom: -5px;
+    box-shadow: 0 3px 8px rgba(139, 90, 60, 0.2);
+}
+
+.paw-left { left: calc(50% - 40px); }
+.paw-right { right: calc(50% - 40px); }
+
+/* Cat Tail */
+.cat-tail {
+    position: absolute;
+    width: 12px;
+    height: 60px;
+    background: #8b5a3c;
+    border-radius: 6px;
+    right: -20px;
+    top: 160px;
+    transform-origin: top center;
+    animation: tailWag 3s ease-in-out infinite;
+    box-shadow: 0 3px 8px rgba(139, 90, 60, 0.2);
+}
+
+/* Cat Glow Effect */
+.cat-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(212, 165, 116, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: pulseGlow 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Animated Eyes Overlay */
+.eyes-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.eye-blink {
+    position: absolute;
+    width: 20px;
+    height: 3px;
+    background: #2c3e2d;
+    border-radius: 10px;
+    opacity: 0;
+    transform-origin: center;
+    animation: eyeBlink 4s ease-in-out infinite;
+}
+
+/* Position eyes based on typical cat face proportions */
+.left-eye-blink {
+    top: 35%;
+    left: 35%;
+    animation-delay: 0s;
+}
+
+.right-eye-blink {
+    top: 35%;
+    right: 35%;
+    animation-delay: 0.1s;
+}
+
+/* Make eyes responsive to image size */
+@media (max-width: 768px) {
+    .eye-blink {
+        width: 16px;
+        height: 2.5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .eye-blink {
+        width: 14px;
+        height: 2px;
+    }
+}
+
+/* Image Click Effects */
+.meao-image.clicked {
+    animation: imageWiggle 0.6s ease-out;
+}
+
+.meao-image.happy {
+    animation: happyBounce 0.8s ease-out;
+}
+
+/* Click Hint */
+.click-hint {
+    margin-top: 2rem;
+    animation: fadeInUp 1.5s ease-out;
+    opacity: 0.8;
+}
+
+.click-hint p {
+    color: #a67c5a;
+    font-size: 1.1rem;
+    font-weight: 400;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+/* Search Container */
+.search-container {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease-out;
+    margin-top: 2rem;
+}
+
+.search-container.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 50px;
+    padding: 8px;
+    box-shadow: 0 8px 25px rgba(139, 90, 60, 0.15);
+    margin-bottom: 1rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    background: transparent;
+    color: #8b5a3c;
+}
+
+#search-input::placeholder {
+    color: #c19660;
+}
+
+#search-btn {
+    background: #d4a574;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#search-btn:hover {
+    background: #c19660;
+    transform: scale(1.05);
+}
+
+#search-btn span {
+    font-size: 1.2rem;
+}
+
+/* Language Toggle */
+.language-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 1rem;
+}
+
+.lang-btn {
+    background: transparent;
+    border: 2px solid #d4a574;
+    color: #8b5a3c;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.lang-btn:hover {
+    background: #d4a574;
+    color: white;
+}
+
+.lang-btn.active {
+    background: #d4a574;
+    color: white;
+}
+
+/* History Controls */
+.history-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 1rem;
+}
+
+.history-btn, .bookmarks-btn {
+    background: transparent;
+    border: 1px solid #c19660;
+    color: #8b5a3c;
+    padding: 6px 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.history-btn:hover, .bookmarks-btn:hover {
+    background: #c19660;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.clear-btn {
+    background: #d4a574;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.clear-btn:hover {
+    background: #c19660;
+    transform: scale(1.05);
+}
+
+/* Results Container */
+.results-container {
+    margin-top: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease-out;
+}
+
+.results-container.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Result Cards */
+.result-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(139, 90, 60, 0.15);
+    text-align: left;
+    margin-top: 1rem;
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #f5f1eb;
+    padding-bottom: 1rem;
+}
+
+.word-title {
+    color: #8b5a3c;
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.phonetic-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 0.5rem;
+}
+
+.phonetic-text {
+    color: #a67c5a;
+    font-style: italic;
+    font-size: 1.1rem;
+}
+
+.audio-btn {
+    background: #d4a574;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.audio-btn:hover {
+    background: #c19660;
+    transform: scale(1.1);
+}
+
+.bookmark-btn {
+    background: transparent;
+    border: 2px solid #d4a574;
+    border-radius: 15px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #8b5a3c;
+    font-size: 1.2rem;
+}
+
+.bookmark-btn:hover {
+    background: #d4a574;
+    transform: scale(1.05);
+}
+
+/* Translation Section */
+.translation-section {
+    background: linear-gradient(135deg, #f0e6dc 0%, #e8ddd4 100%);
+    border: 2px solid #d4a574;
+    border-radius: 15px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    animation: slideInUp 0.4s ease-out;
+}
+
+.translation-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #8b5a3c;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.translation-icon {
+    font-size: 1.2rem;
+}
+
+.translation-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.translation-text {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #6d5942;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid #c19660;
+}
+
+.translation-lang-indicator {
+    background: #c19660;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.meanings-container {
+    margin-bottom: 1.5rem;
+}
+
+.meaning-section {
+    margin-bottom: 1.5rem;
+}
+
+.part-of-speech {
+    color: #c19660;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.definition-item {
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+    border-left: 3px solid #f5f1eb;
+}
+
+.definition {
+    color: #6d5942;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+}
+
+.example {
+    color: #a67c5a;
+    font-style: italic;
+    margin-left: 1rem;
+    padding: 0.5rem;
+    background: #f5f1eb;
+    border-radius: 8px;
+    border-left: 3px solid #d4a574;
+}
+
+.result-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #f5f1eb;
+    color: #a67c5a;
+    font-size: 0.9rem;
+}
+
+.footer-left {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.language-tag {
+    background: #d4a574;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.jlpt-tag {
+    background: #8b5a3c;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.common-tag {
+    background: #c19660;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+/* Error Card */
+.error-card {
+    text-align: center;
+    background: linear-gradient(135deg, #fff3e0 0%, #fff 100%);
+    border: 2px solid #ffcc80;
+}
+
+.error-content h3 {
+    color: #8b5a3c;
+    margin-bottom: 1rem;
+}
+
+.error-content p {
+    color: #6d5942;
+    margin-bottom: 1rem;
+}
+
+.error-suggestions {
+    text-align: left;
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    border-left: 4px solid #d4a574;
+}
+
+.error-suggestions ul {
+    margin-left: 1rem;
+    color: #6d5942;
+}
+
+.error-suggestions li {
+    margin-bottom: 0.3rem;
+}
+
+/* History and Bookmarks Lists */
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f5f1eb;
+}
+
+.list-header h3 {
+    color: #8b5a3c;
+    margin: 0;
+}
+
+.history-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.history-item {
+    background: #f9f6f1;
+    border: 1px solid #e8ddd4;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-item:hover {
+    background: #f0e6dc;
+    border-color: #d4a574;
+    transform: translateX(5px);
+}
+
+.history-word {
+    font-weight: 500;
+    color: #8b5a3c;
+    font-size: 1.1rem;
+}
+
+.history-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.history-time {
+    color: #a67c5a;
+    font-size: 0.8rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #a67c5a;
+}
+
+.empty-state h3 {
+    color: #8b5a3c;
+    margin-bottom: 1rem;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes breathe {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+@keyframes gentleFloat {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-3px) rotate(0.5deg);
+    }
+    50% {
+        transform: translateY(-6px) rotate(0deg);
+    }
+    75% {
+        transform: translateY(-3px) rotate(-0.5deg);
+    }
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+@keyframes imageWiggle {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    15% {
+        transform: rotate(5deg) scale(1.02);
+    }
+    30% {
+        transform: rotate(-4deg) scale(1.02);
+    }
+    45% {
+        transform: rotate(3deg) scale(1.02);
+    }
+    60% {
+        transform: rotate(-2deg) scale(1.02);
+    }
+    75% {
+        transform: rotate(1deg) scale(1.02);
+    }
+}
+
+@keyframes happyBounce {
+    0%, 100% {
+        transform: translateY(0px) scale(1);
+    }
+    25% {
+        transform: translateY(-10px) scale(1.05);
+    }
+    50% {
+        transform: translateY(-15px) scale(1.08);
+    }
+    75% {
+        transform: translateY(-8px) scale(1.03);
+    }
+}
+
+@keyframes eyeBlink {
+    0%, 90%, 100% {
+        opacity: 0;
+        transform: scaleY(0);
+    }
+    92%, 98% {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}
+
+@keyframes quickBlink {
+    0%, 100% {
+        opacity: 0;
+        transform: scaleY(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-5px);
+    }
+    60% {
+        transform: translateY(-3px);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes blink {
+    0%, 90%, 100% {
+        transform: scaleY(0);
+    }
+    92%, 98% {
+        transform: scaleY(1);
+    }
+}
+
+@keyframes eyeMove {
+    0%, 20%, 100% {
+        transform: translateX(0);
+    }
+    10% {
+        transform: translateX(-2px);
+    }
+    30% {
+        transform: translateX(2px);
+    }
+}
+
+@keyframes tailWag {
+    0%, 100% {
+        transform: rotate(10deg);
+    }
+    50% {
+        transform: rotate(-5deg);
+    }
+}
+
+@keyframes quickBlink {
+    0%, 100% {
+        transform: scaleY(0);
+    }
+    50% {
+        transform: scaleY(1);
+    }
+}
+
+/* Click and Happy state animations for the animated cat */
+.animated-cat.clicked {
+    animation: gentleFloat 4s ease-in-out infinite, imageWiggle 0.6s ease-out;
+}
+
+.animated-cat.happy {
+    animation: gentleFloat 4s ease-in-out infinite, happyBounce 0.8s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .app-title {
+        font-size: 2.5rem;
+    }
+    
+    .animated-cat {
+        transform: scale(0.85);
+    }
+    
+    .search-box {
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .app-title {
+        font-size: 2rem;
+    }
+    
+    .app-subtitle {
+        font-size: 1rem;
+    }
+    
+    .animated-cat {
+        transform: scale(0.7);
+    }
+    
+    .cat-container {
+        margin: 1.5rem 0;
+    }
+}
