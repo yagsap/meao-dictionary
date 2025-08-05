@@ -19,55 +19,14 @@
 
         <!-- Main Cat Area -->
         <main class="cat-container">
-            <div class="animated-cat" id="meao-cat">
-                <!-- Cat Head -->
-                <div class="cat-head">
-                    <!-- Ears -->
-                    <div class="ear ear-left"></div>
-                    <div class="ear ear-right"></div>
-                    <div class="ear-inner ear-inner-left"></div>
-                    <div class="ear-inner ear-inner-right"></div>
-                    
-                    <!-- Head shape -->
-                    <div class="head-shape">
-                        <!-- Eyes -->
-                        <div class="eye eye-left">
-                            <div class="pupil"></div>
-                            <div class="eye-blink"></div>
-                        </div>
-                        <div class="eye eye-right">
-                            <div class="pupil"></div>
-                            <div class="eye-blink"></div>
-                        </div>
-                        
-                        <!-- Nose -->
-                        <div class="nose"></div>
-                        
-                        <!-- Mouth -->
-                        <div class="mouth">
-                            <div class="mouth-left"></div>
-                            <div class="mouth-right"></div>
-                        </div>
-                        
-                        <!-- Whiskers -->
-                        <div class="whisker whisker-left-1"></div>
-                        <div class="whisker whisker-left-2"></div>
-                        <div class="whisker whisker-right-1"></div>
-                        <div class="whisker whisker-right-2"></div>
-                    </div>
+            <div class="meao-image-container" id="meao-cat">
+                <img src="meao.png" alt="Meao the Dictionary Cat" class="meao-image" id="meao-image">
+                
+                <!-- Eyes overlay for blinking animation -->
+                <div class="eyes-overlay">
+                    <div class="eye-blink left-eye-blink"></div>
+                    <div class="eye-blink right-eye-blink"></div>
                 </div>
-                
-                <!-- Cat Body -->
-                <div class="cat-body">
-                    <div class="body-shape"></div>
-                    <div class="paw paw-left"></div>
-                    <div class="paw paw-right"></div>
-                </div>
-                
-                <!-- Cat Tail -->
-                <div class="cat-tail"></div>
-                
-                <div class="cat-glow"></div>
             </div>
             
             <!-- Click hint -->
@@ -97,6 +56,48 @@
                 <button class="bookmarks-btn" onclick="window.meaoCat.showBookmarks()">
                     <span>⭐</span> Bookmarks
                 </button>
+                <button class="voice-translation-btn" id="voice-translation-btn" onclick="window.meaoCat.toggleTranslationMode('en-ja')">
+                    <span>🎤</span> EN→JA Translation
+                </button>
+                <button class="voice-translation-btn-ja" id="voice-translation-btn-ja" onclick="window.meaoCat.toggleTranslationMode('ja-en')">
+                    <span>🎌</span> JA→EN Translation
+                </button>
+            </div>
+            
+            <div class="voice-status" id="voice-status">
+                <span class="inactive">🔇 Translation Off</span>
+            </div>
+        </div>
+
+        <!-- English to Japanese Translation Panel -->
+        <div class="translation-panel" id="translation-panel-en-ja">
+            <div class="translation-header">
+                <h3>🎌 Live English → Japanese Translation</h3>
+                <button class="clear-translations-btn" onclick="window.meaoCat.clearAllTranslations('en-ja')">Clear All</button>
+            </div>
+            
+            <div class="interim-transcript" id="interim-transcript-en-ja">
+                <!-- Live transcript appears here -->
+            </div>
+            
+            <div class="translation-list" id="translation-list-en-ja">
+                <!-- Translation results appear here -->
+            </div>
+        </div>
+
+        <!-- Japanese to English Translation Panel -->
+        <div class="translation-panel" id="translation-panel-ja-en">
+            <div class="translation-header">
+                <h3>🎌 Live Japanese → English Translation</h3>
+                <button class="clear-translations-btn" onclick="window.meaoCat.clearAllTranslations('ja-en')">Clear All</button>
+            </div>
+            
+            <div class="interim-transcript" id="interim-transcript-ja-en">
+                <!-- Live transcript appears here -->
+            </div>
+            
+            <div class="translation-list" id="translation-list-ja-en">
+                <!-- Translation results appear here -->
             </div>
         </div>
 

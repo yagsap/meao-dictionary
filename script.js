@@ -12,12 +12,23 @@ class MeaoCat {
         this.isSearchVisible = false;
         this.currentLanguage = 'en';
         
+        // Voice recognition and translation properties
+        this.recognition = null;
+        this.isListening = false;
+        this.isTranslationMode = false;
+        this.currentTranslationMode = null; // 'en-ja' or 'ja-en'
+        this.translationResults = {
+            'en-ja': [],
+            'ja-en': []
+        };
+        
         this.init();
     }
     
     init() {
         this.setupEventListeners();
         this.setupLanguageToggle();
+        this.initializeVoiceRecognition();
         console.log('🐱 Meao is ready! Click the cat to start searching.');
     }
     
@@ -352,6 +363,293 @@ class MeaoCat {
                 language: 'ja',
                 error: true
             };
+        }
+    }
+    
+    // Initialize Web Speech API for voice recognition
+    initializeVoiceRecognition() {
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            this.recognition = new SpeechRecognition();
+            
+            this.recognition.continuous = true;
+            this.recognition.interimResults = true;
+            this.recognition.lang = 'en-US'; // Will be changed based on translation mode
+            this.recognition.maxAlternatives = 1;
+            
+            this.recognition.onstart = () => {
+                console.log('🎤 Voice recognition started');
+                this.isListening = true;
+                this.updateVoiceUI();
+            };
+            
+            this.recognition.onresult = (event) => {
+                let finalTranscript = '';
+                let interimTranscript = '';
+                
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript;
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                
+                if (finalTranscript && this.isTranslationMode) {
+                    this.translateAndDisplay(finalTranscript.trim(), this.currentTranslationMode);
+                }
+                
+                // Update interim display
+                if (interimTranscript && this.isTranslationMode) {
+                    this.updateInterimTranscript(interimTranscript, this.currentTranslationMode);
+                }
+            };
+            
+            this.recognition.onerror = (event) => {
+                console.error('Voice recognition error:', event.error);
+                this.isListening = false;
+                this.updateVoiceUI();
+            };
+            
+            this.recognition.onend = () => {
+                console.log('🎤 Voice recognition ended');
+                this.isListening = false;
+                this.updateVoiceUI();
+                
+                // Restart if still in translation mode
+                if (this.isTranslationMode) {
+                    setTimeout(() => {
+                        if (this.isTranslationMode) {
+                            this.startListening();
+                        }
+                    }, 100);
+                }
+            };
+            
+            console.log('🎤 Voice recognition initialized');
+        } else {
+            console.warn('Voice recognition not supported in this browser');
+        }
+    }
+    
+    // Start/stop continuous listening
+    toggleTranslationMode(mode) {
+        if (!this.recognition) {
+            alert('Voice recognition is not supported in your browser. Please use Chrome, Safari, or Edge.');
+            return;
+        }
+        
+        // If already in this mode, turn it off
+        if (this.isTranslationMode && this.currentTranslationMode === mode) {
+            this.isTranslationMode = false;
+            this.currentTranslationMode = null;
+            this.stopListening();
+            this.hideTranslationPanel();
+        } else {
+            // Turn off any existing mode first
+            if (this.isTranslationMode) {
+                this.stopListening();
+                this.hideTranslationPanel();
+            }
+            
+            // Start new mode
+            this.isTranslationMode = true;
+            this.currentTranslationMode = mode;
+            
+            // Set recognition language based on mode
+            if (mode === 'en-ja') {
+                this.recognition.lang = 'en-US';
+            } else if (mode === 'ja-en') {
+                this.recognition.lang = 'ja-JP';
+            }
+            
+            this.startListening();
+            this.showTranslationPanel(mode);
+        }
+        
+        this.updateVoiceUI();
+        console.log(`🎌 Translation mode: ${this.isTranslationMode ? `${mode} ON` : 'OFF'}`);
+    }
+    
+    startListening() {
+        if (this.recognition && !this.isListening) {
+            try {
+                this.recognition.start();
+            } catch (error) {
+                console.error('Error starting voice recognition:', error);
+            }
+        }
+    }
+    
+    stopListening() {
+        if (this.recognition && this.isListening) {
+            this.recognition.stop();
+        }
+    }
+    
+    // Translate spoken text and display result
+    async translateAndDisplay(text, mode) {
+        if (!text.trim() || !mode) return;
+        
+        console.log(`🗣️ Translating (${mode}): "${text}"`);
+        
+        try {
+            let translation;
+            let fromLang, toLang, originalLangFlag, translatedLangFlag;
+            
+            if (mode === 'en-ja') {
+                fromLang = 'en';
+                toLang = 'ja';
+                originalLangFlag = '🇺🇸';
+                translatedLangFlag = '🇯🇵';
+            } else if (mode === 'ja-en') {
+                fromLang = 'ja';
+                toLang = 'en';
+                originalLangFlag = '🇯🇵';
+                translatedLangFlag = '🇺🇸';
+            }
+            
+            translation = await this.translateText(text, fromLang, toLang);
+            
+            if (translation) {
+                const translationItem = {
+                    original: text,
+                    translated: translation,
+                    timestamp: new Date().toLocaleTimeString(),
+                    id: Date.now(),
+                    originalLangFlag: originalLangFlag,
+                    translatedLangFlag: translatedLangFlag
+                };
+                
+                this.translationResults[mode].unshift(translationItem);
+                
+                // Keep only last 20 translations per mode
+                if (this.translationResults[mode].length > 20) {
+                    this.translationResults[mode] = this.translationResults[mode].slice(0, 20);
+                }
+                
+                this.updateTranslationDisplay(mode);
+                this.triggerBlink(); // Cat reacts to new translation
+            }
+        } catch (error) {
+            console.error('Translation error:', error);
+        }
+    }
+    
+    updateInterimTranscript(interimText, mode) {
+        const interimElement = document.getElementById(`interim-transcript-${mode}`);
+        if (interimElement) {
+            interimElement.textContent = interimText;
+        }
+    }
+    
+    updateTranslationDisplay(mode) {
+        const translationList = document.getElementById(`translation-list-${mode}`);
+        if (!translationList) return;
+        
+        const translations = this.translationResults[mode] || [];
+        const translationsHTML = translations.map(item => `
+            <div class="translation-item" data-id="${item.id}">
+                <div class="translation-original">
+                    <span class="lang-indicator">${item.originalLangFlag}</span>
+                    "${item.original}"
+                </div>
+                <div class="translation-arrow">→</div>
+                <div class="translation-result">
+                    <span class="lang-indicator">${item.translatedLangFlag}</span>
+                    "${item.translated}"
+                </div>
+                <div class="translation-time">${item.timestamp}</div>
+                <button class="remove-translation" onclick="window.meaoCat.removeTranslation(${item.id}, '${mode}')">×</button>
+            </div>
+        `).join('');
+        
+        translationList.innerHTML = translationsHTML;
+    }
+    
+    removeTranslation(id, mode) {
+        if (this.translationResults[mode]) {
+            this.translationResults[mode] = this.translationResults[mode].filter(item => item.id !== id);
+            this.updateTranslationDisplay(mode);
+        }
+    }
+    
+    clearAllTranslations(mode) {
+        if (confirm('Clear all translations?')) {
+            if (mode && this.translationResults[mode]) {
+                this.translationResults[mode] = [];
+                this.updateTranslationDisplay(mode);
+            }
+        }
+    }
+    
+    showTranslationPanel(mode) {
+        // Hide all panels first
+        const panels = ['en-ja', 'ja-en'];
+        panels.forEach(panelMode => {
+            const panel = document.getElementById(`translation-panel-${panelMode}`);
+            if (panel) {
+                panel.classList.remove('show');
+            }
+        });
+        
+        // Show the requested panel
+        const panel = document.getElementById(`translation-panel-${mode}`);
+        if (panel) {
+            panel.classList.add('show');
+        }
+    }
+    
+    hideTranslationPanel() {
+        const panels = ['en-ja', 'ja-en'];
+        panels.forEach(mode => {
+            const panel = document.getElementById(`translation-panel-${mode}`);
+            if (panel) {
+                panel.classList.remove('show');
+            }
+        });
+    }
+    
+    updateVoiceUI() {
+        const voiceBtnEnJa = document.getElementById('voice-translation-btn');
+        const voiceBtnJaEn = document.getElementById('voice-translation-btn-ja');
+        const statusIndicator = document.getElementById('voice-status');
+        
+        // Update EN→JA button
+        if (voiceBtnEnJa) {
+            if (this.isTranslationMode && this.currentTranslationMode === 'en-ja') {
+                voiceBtnEnJa.classList.add('active');
+                voiceBtnEnJa.innerHTML = this.isListening ? '🔴 Stop EN→JA' : '⏸️ EN→JA Active';
+            } else {
+                voiceBtnEnJa.classList.remove('active');
+                voiceBtnEnJa.innerHTML = '<span>🎤</span> EN→JA Translation';
+            }
+        }
+        
+        // Update JA→EN button
+        if (voiceBtnJaEn) {
+            if (this.isTranslationMode && this.currentTranslationMode === 'ja-en') {
+                voiceBtnJaEn.classList.add('active');
+                voiceBtnJaEn.innerHTML = this.isListening ? '🔴 Stop JA→EN' : '⏸️ JA→EN Active';
+            } else {
+                voiceBtnJaEn.classList.remove('active');
+                voiceBtnJaEn.innerHTML = '<span>🎌</span> JA→EN Translation';
+            }
+        }
+        
+        // Update status indicator
+        if (statusIndicator) {
+            if (this.isTranslationMode) {
+                const modeLabel = this.currentTranslationMode === 'en-ja' ? 'English→Japanese' : 'Japanese→English';
+                statusIndicator.innerHTML = this.isListening ? 
+                    `<span class="listening">🎤 Listening (${modeLabel})...</span>` : 
+                    `<span class="waiting">⏸️ ${modeLabel} Mode Active</span>`;
+                statusIndicator.classList.add('active');
+            } else {
+                statusIndicator.innerHTML = '<span class="inactive">🔇 Translation Off</span>';
+                statusIndicator.classList.remove('active');
+            }
         }
     }
     
