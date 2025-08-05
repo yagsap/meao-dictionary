@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Test - Meao Dictionary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .test-frame {
+            border: 2px solid #333;
+            margin: 20px 0;
+            overflow: hidden;
+            resize: both;
+        }
+        .test-label {
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            margin: 0;
+            font-size: 14px;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Meao Dictionary - Responsive Design Test</h1>
+    <p>Resize the frames below to test different screen sizes:</p>
+    
+    <div class="test-frame" style="width: 1200px;">
+        <div class="test-label">Desktop (1200px wide)</div>
+        <iframe src="index.html"></iframe>
+    </div>
+    
+    <div class="test-frame" style="width: 768px;">
+        <div class="test-label">Tablet (768px wide)</div>
+        <iframe src="index.html"></iframe>
+    </div>
+    
+    <div class="test-frame" style="width: 480px;">
+        <div class="test-label">Mobile (480px wide)</div>
+        <iframe src="index.html"></iframe>
+    </div>
+    
+    <div class="test-frame" style="width: 360px;">
+        <div class="test-label">Small Mobile (360px wide)</div>
+        <iframe src="index.html"></iframe>
+    </div>
+    
+    <h2>Testing Checklist:</h2>
+    <ul>
+        <li>✅ Text remains readable at all sizes</li>
+        <li>✅ Buttons are adequately sized for touch (min 44px)</li>
+        <li>✅ Content doesn't overflow horizontally</li>
+        <li>✅ Cat image scales appropriately</li>
+        <li>✅ Search interface is usable on mobile</li>
+        <li>✅ Translation panels are scrollable</li>
+        <li>✅ Navigation buttons stack properly on small screens</li>
+    </ul>
+</body>
+</html>
