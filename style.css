@@ -566,6 +566,9 @@ body::after {
     margin-bottom: 8px;
     font-weight: 500;
     color: #6d5942;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .translation-arrow {
@@ -583,6 +586,9 @@ body::after {
     margin-bottom: 8px;
     font-weight: 500;
     color: #8b5a3c;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .lang-indicator {
@@ -667,6 +673,9 @@ body::after {
     margin: 0;
     font-size: 2rem;
     font-weight: 600;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .phonetic-section {
@@ -759,6 +768,9 @@ body::after {
     border-radius: 10px;
     border: 1px solid rgba(193, 150, 96, 0.3);
     box-shadow: 0 2px 5px rgba(139, 90, 60, 0.05);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .translation-lang-indicator {
@@ -798,6 +810,8 @@ body::after {
     color: #6d5942;
     line-height: 1.6;
     margin-bottom: 0.5rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .example {
@@ -808,6 +822,8 @@ body::after {
     background: #f5f1eb;
     border-radius: 8px;
     border-left: 3px solid #d4a574;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .result-footer {
@@ -930,6 +946,9 @@ body::after {
     font-weight: 500;
     color: #8b5a3c;
     font-size: 1.1rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .history-meta {
