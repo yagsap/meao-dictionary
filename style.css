@@ -1355,15 +1355,25 @@ body::after {
     }
     
     .history-controls {
-        gap: 5px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
     }
     
     .history-btn, .bookmarks-btn, .voice-translation-btn, .voice-translation-btn-ja {
-        padding: 4px 8px;
-        font-size: 0.75rem;
-        flex: 1;
-        min-width: 0;
+        padding: 8px 4px;
+        font-size: 0.8rem;
+        width: 100%;
+        justify-content: center;
         text-align: center;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .extra-text {
+        display: none;
     }
     
     .voice-status {
@@ -1525,8 +1535,8 @@ body::after {
     }
     
     .history-controls {
-        flex-direction: column;
-        gap: 4px;
+        grid-template-columns: 1fr;
+        gap: 6px;
     }
     
     .history-btn, .bookmarks-btn, .voice-translation-btn, .voice-translation-btn-ja {
