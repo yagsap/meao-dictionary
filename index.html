@@ -44,10 +44,7 @@
                 </button>
             </div>
             
-            <div class="language-toggle">
-                <button class="lang-btn active" data-lang="en">English</button>
-                <button class="lang-btn" data-lang="ja">日本語</button>
-            </div>
+            <!-- Old language toggle removed -->
             
             <div class="history-controls">
                 <button class="history-btn" onclick="window.meaoCat.showHistory()">
@@ -56,11 +53,17 @@
                 <button class="bookmarks-btn" onclick="window.meaoCat.showBookmarks()">
                     <span>⭐</span> Bookmarks
                 </button>
-                <button class="voice-translation-btn" id="voice-translation-btn" onclick="window.meaoCat.toggleTranslationMode('en-ja')">
-                    <span>🎤</span> EN→JA <span class="extra-text">Translation</span>
-                </button>
-                <button class="voice-translation-btn-ja" id="voice-translation-btn-ja" onclick="window.meaoCat.toggleTranslationMode('ja-en')">
-                    <span>🎌</span> JA→EN <span class="extra-text">Translation</span>
+            </div>
+            
+            <!-- New Translation Controls -->
+            <div class="translation-controls-container">
+                <div class="lang-select-group">
+                    <select id="source-lang" class="lang-select"></select>
+                    <button id="swap-lang-btn" class="swap-btn" title="Swap Languages">⇄</button>
+                    <select id="target-lang" class="lang-select"></select>
+                </div>
+                <button id="voice-translation-btn" class="voice-translation-btn full-width" onclick="window.meaoCat.toggleTranslation()">
+                    <span>🎤</span> Start Translation
                 </button>
             </div>
             
@@ -69,34 +72,18 @@
             </div>
         </div>
 
-        <!-- English to Japanese Translation Panel -->
-        <div class="translation-panel" id="translation-panel-en-ja">
+        <!-- Generic Translation Panel -->
+        <div class="translation-panel" id="translation-panel">
             <div class="translation-header">
-                <h3>🎌 Live English → Japanese Translation</h3>
-                <button class="clear-translations-btn" onclick="window.meaoCat.clearAllTranslations('en-ja')">Clear All</button>
+                <h3 id="translation-panel-title">🌐 Live Translation</h3>
+                <button class="clear-translations-btn" onclick="window.meaoCat.clearAllTranslations()">Clear All</button>
             </div>
             
-            <div class="interim-transcript" id="interim-transcript-en-ja">
+            <div class="interim-transcript" id="interim-transcript">
                 <!-- Live transcript appears here -->
             </div>
             
-            <div class="translation-list" id="translation-list-en-ja">
-                <!-- Translation results appear here -->
-            </div>
-        </div>
-
-        <!-- Japanese to English Translation Panel -->
-        <div class="translation-panel" id="translation-panel-ja-en">
-            <div class="translation-header">
-                <h3>🎌 Live Japanese → English Translation</h3>
-                <button class="clear-translations-btn" onclick="window.meaoCat.clearAllTranslations('ja-en')">Clear All</button>
-            </div>
-            
-            <div class="interim-transcript" id="interim-transcript-ja-en">
-                <!-- Live transcript appears here -->
-            </div>
-            
-            <div class="translation-list" id="translation-list-ja-en">
+            <div class="translation-list" id="translation-list">
                 <!-- Translation results appear here -->
             </div>
         </div>

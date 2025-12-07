@@ -7,29 +7,74 @@ class MeaoCat {
         this.searchContainer = document.getElementById('search-container');
         this.searchInput = document.getElementById('search-input');
         this.searchBtn = document.getElementById('search-btn');
-        this.langButtons = document.querySelectorAll('.lang-btn');
+        
+        // New language controls
+        this.sourceLangSelect = document.getElementById('source-lang');
+        this.targetLangSelect = document.getElementById('target-lang');
+        this.swapLangBtn = document.getElementById('swap-lang-btn');
         
         this.isSearchVisible = false;
-        this.currentLanguage = 'en';
         
         // Voice recognition and translation properties
         this.recognition = null;
         this.isListening = false;
         this.isTranslationMode = false;
-        this.currentTranslationMode = null; // 'en-ja' or 'ja-en'
-        this.translationResults = {
-            'en-ja': [],
-            'ja-en': []
-        };
+        this.translationResults = [];
         
         this.init();
     }
     
     init() {
+        this.populateLanguages();
         this.setupEventListeners();
-        this.setupLanguageToggle();
         this.initializeVoiceRecognition();
         console.log('🐱 Meao is ready! Click the cat to start searching.');
+    }
+
+    populateLanguages() {
+        const languages = [
+            { code: 'en', name: 'English', flag: '🇺🇸' },
+            { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
+            { code: 'es', name: 'Spanish', flag: '🇪🇸' },
+            { code: 'fr', name: 'French', flag: '🇫🇷' },
+            { code: 'de', name: 'German', flag: '🇩🇪' },
+            { code: 'it', name: 'Italian', flag: '🇮🇹' },
+            { code: 'ko', name: 'Korean', flag: '🇰🇷' },
+            { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
+            { code: 'ru', name: 'Russian', flag: '🇷🇺' },
+            { code: 'pt', name: 'Portuguese', flag: '🇵🇹' }
+        ];
+
+        const createOption = (lang) => {
+            const option = document.createElement('option');
+            option.value = lang.code;
+            option.textContent = `${lang.flag} ${lang.name}`;
+            return option;
+        };
+
+        // Clear existing options
+        this.sourceLangSelect.innerHTML = '';
+        this.targetLangSelect.innerHTML = '';
+
+        languages.forEach(lang => {
+            this.sourceLangSelect.appendChild(createOption(lang));
+            this.targetLangSelect.appendChild(createOption(lang));
+        });
+
+        // Set defaults
+        this.sourceLangSelect.value = 'en';
+        this.targetLangSelect.value = 'ja';
+        
+        this.updatePlaceholder();
+    }
+    
+    getLanguageName(code) {
+        const names = {
+            'en': 'English', 'ja': 'Japanese', 'es': 'Spanish', 'fr': 'French',
+            'de': 'German', 'it': 'Italian', 'ko': 'Korean', 'zh': 'Chinese',
+            'ru': 'Russian', 'pt': 'Portuguese'
+        };
+        return names[code] || code.toUpperCase();
     }
     
     setupEventListeners() {
@@ -58,41 +103,37 @@ class MeaoCat {
         this.searchInput.addEventListener('blur', () => {
             this.searchInput.parentElement.style.transform = 'scale(1)';
         });
-    }
-    
-    setupLanguageToggle() {
-        this.langButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Remove active class from all buttons
-                this.langButtons.forEach(b => b.classList.remove('active'));
-                
-                // Add active class to clicked button
-                btn.classList.add('active');
-                
-                // Update current language
-                this.currentLanguage = btn.dataset.lang;
-                
-                // Update placeholder text
-                this.updatePlaceholder();
-                
-                // Add a subtle animation
-                btn.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    btn.style.transform = 'scale(1)';
-                }, 150);
-                
-                console.log(`🌍 Language switched to: ${this.currentLanguage}`);
-            });
+
+        // Language controls
+        this.sourceLangSelect.addEventListener('change', () => {
+            this.updatePlaceholder();
+            console.log(`Source language changed to: ${this.sourceLangSelect.value}`);
+        });
+
+        this.targetLangSelect.addEventListener('change', () => {
+            console.log(`Target language changed to: ${this.targetLangSelect.value}`);
+        });
+
+        this.swapLangBtn.addEventListener('click', () => {
+            const temp = this.sourceLangSelect.value;
+            this.sourceLangSelect.value = this.targetLangSelect.value;
+            this.targetLangSelect.value = temp;
+            
+            this.updatePlaceholder();
+            
+            // Animation for swap button
+            this.swapLangBtn.style.transform = 'rotate(180deg)';
+            setTimeout(() => {
+                this.swapLangBtn.style.transform = 'rotate(0deg)';
+            }, 300);
         });
     }
     
     updatePlaceholder() {
-        const placeholders = {
-            en: 'Search for any word...',
-            ja: '単語を検索...'
-        };
-        
-        this.searchInput.placeholder = placeholders[this.currentLanguage] || placeholders.en;
+        const langName = this.sourceLangSelect.options[this.sourceLangSelect.selectedIndex].text;
+        // Remove flag from text for placeholder
+        const cleanName = langName.replace(/^[^\s]+\s/, '');
+        this.searchInput.placeholder = `Search in ${cleanName}...`;
     }
     
     handleCatClick() {
@@ -191,6 +232,8 @@ class MeaoCat {
     
     async handleSearch() {
         const query = this.searchInput.value.trim();
+        const sourceLang = this.sourceLangSelect.value;
+        const targetLang = this.targetLangSelect.value;
         
         if (!query) {
             // Shake the search box if empty
@@ -198,17 +241,20 @@ class MeaoCat {
             return;
         }
         
-        console.log(`🔍 Searching for: "${query}" in ${this.currentLanguage}`);
+        console.log(`🔍 Searching for: "${query}" from ${sourceLang} to ${targetLang}`);
         
         // Add loading state
         this.setSearchLoading(true);
         
         try {
             let result;
-            if (this.currentLanguage === 'en') {
-                result = await this.searchEnglishDictionary(query);
+            if (sourceLang === 'en') {
+                result = await this.searchEnglishDictionary(query, targetLang);
+            } else if (sourceLang === 'ja') {
+                result = await this.searchJapaneseDictionary(query, targetLang);
             } else {
-                result = await this.searchJapaneseDictionary(query);
+                // Generic translation for other languages
+                result = await this.performGenericTranslation(query, sourceLang, targetLang);
             }
             
             this.setSearchLoading(false);
@@ -225,7 +271,7 @@ class MeaoCat {
     }
     
     // Search English dictionary using Free Dictionary API
-    async searchEnglishDictionary(word) {
+    async searchEnglishDictionary(word, targetLang = 'ja') {
         const apiUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`;
         
         const response = await fetch(apiUrl);
@@ -252,25 +298,25 @@ class MeaoCat {
             language: 'en'
         };
         
-        // Add Japanese translation
+        // Add Translation
         try {
-            const japaneseTranslation = await this.translateText(entry.word, 'en', 'ja');
-            if (japaneseTranslation) {
+            const translationText = await this.translateText(entry.word, 'en', targetLang);
+            if (translationText) {
                 result.translation = {
-                    text: japaneseTranslation,
-                    language: 'ja',
-                    label: 'Japanese Translation'
+                    text: translationText,
+                    language: targetLang,
+                    label: `${this.getLanguageName(targetLang)} Translation`
                 };
             }
         } catch (error) {
-            console.warn('Failed to get Japanese translation:', error);
+            console.warn('Failed to get translation:', error);
         }
         
         return result;
     }
     
     // Search Japanese dictionary using JMdict API
-    async searchJapaneseDictionary(word) {
+    async searchJapaneseDictionary(word, targetLang = 'en') {
         try {
             // Using jisho.org API which provides access to JMdict data
             const apiUrl = `https://jisho.org/api/v1/search/words?keyword=${encodeURIComponent(word)}`;
@@ -329,18 +375,18 @@ class MeaoCat {
                 isCommon: entry.is_common || false
             };
             
-            // Add English translation
+            // Add Translation
             try {
-                const englishTranslation = await this.translateText(result.word, 'ja', 'en');
-                if (englishTranslation) {
+                const translationText = await this.translateText(result.word, 'ja', targetLang);
+                if (translationText) {
                     result.translation = {
-                        text: englishTranslation,
-                        language: 'en',
-                        label: 'English Translation'
+                        text: translationText,
+                        language: targetLang,
+                        label: `${this.getLanguageName(targetLang)} Translation`
                     };
                 }
             } catch (error) {
-                console.warn('Failed to get English translation:', error);
+                console.warn('Failed to get translation:', error);
             }
             
             return result;
@@ -364,6 +410,33 @@ class MeaoCat {
                 error: true
             };
         }
+    }
+
+    async performGenericTranslation(word, sourceLang, targetLang) {
+        const translation = await this.translateText(word, sourceLang, targetLang);
+        
+        if (!translation) {
+            throw new Error('Translation failed');
+        }
+
+        return {
+            word: word,
+            phonetic: '',
+            audio: '',
+            meanings: [{
+                partOfSpeech: 'Translation',
+                definitions: [{
+                    definition: translation,
+                    example: ''
+                }]
+            }],
+            language: sourceLang,
+            translation: {
+                text: translation,
+                language: targetLang,
+                label: `${this.getLanguageName(targetLang)} Translation`
+            }
+        };
     }
     
     // Initialize Web Speech API for voice recognition
@@ -397,12 +470,12 @@ class MeaoCat {
                 }
                 
                 if (finalTranscript && this.isTranslationMode) {
-                    this.translateAndDisplay(finalTranscript.trim(), this.currentTranslationMode);
+                    this.translateAndDisplay(finalTranscript.trim());
                 }
                 
                 // Update interim display
                 if (interimTranscript && this.isTranslationMode) {
-                    this.updateInterimTranscript(interimTranscript, this.currentTranslationMode);
+                    this.updateInterimTranscript(interimTranscript);
                 }
             };
             
@@ -434,42 +507,37 @@ class MeaoCat {
     }
     
     // Start/stop continuous listening
-    toggleTranslationMode(mode) {
+    toggleTranslation() {
         if (!this.recognition) {
             alert('Voice recognition is not supported in your browser. Please use Chrome, Safari, or Edge.');
             return;
         }
         
-        // If already in this mode, turn it off
-        if (this.isTranslationMode && this.currentTranslationMode === mode) {
+        if (this.isTranslationMode) {
+            // Stop
             this.isTranslationMode = false;
-            this.currentTranslationMode = null;
             this.stopListening();
             this.hideTranslationPanel();
         } else {
-            // Turn off any existing mode first
-            if (this.isTranslationMode) {
-                this.stopListening();
-                this.hideTranslationPanel();
-            }
-            
-            // Start new mode
+            // Start
             this.isTranslationMode = true;
-            this.currentTranslationMode = mode;
             
-            // Set recognition language based on mode
-            if (mode === 'en-ja') {
-                this.recognition.lang = 'en-US';
-            } else if (mode === 'ja-en') {
-                this.recognition.lang = 'ja-JP';
-            }
+            // Set recognition language based on source
+            const sourceLang = this.sourceLangSelect.value;
+            // Map simple codes to full locale codes for speech recognition
+            const locales = {
+                'en': 'en-US', 'ja': 'ja-JP', 'es': 'es-ES', 'fr': 'fr-FR',
+                'de': 'de-DE', 'it': 'it-IT', 'ko': 'ko-KR', 'zh': 'zh-CN',
+                'ru': 'ru-RU', 'pt': 'pt-PT'
+            };
+            this.recognition.lang = locales[sourceLang] || 'en-US';
             
             this.startListening();
-            this.showTranslationPanel(mode);
+            this.showTranslationPanel();
         }
         
         this.updateVoiceUI();
-        console.log(`🎌 Translation mode: ${this.isTranslationMode ? `${mode} ON` : 'OFF'}`);
+        console.log(`🎌 Translation mode: ${this.isTranslationMode ? 'ON' : 'OFF'}`);
     }
     
     startListening() {
@@ -489,28 +557,16 @@ class MeaoCat {
     }
     
     // Translate spoken text and display result
-    async translateAndDisplay(text, mode) {
-        if (!text.trim() || !mode) return;
+    async translateAndDisplay(text) {
+        if (!text.trim()) return;
         
-        console.log(`🗣️ Translating (${mode}): "${text}"`);
+        const sourceLang = this.sourceLangSelect.value;
+        const targetLang = this.targetLangSelect.value;
+        
+        console.log(`🗣️ Translating: "${text}" from ${sourceLang} to ${targetLang}`);
         
         try {
-            let translation;
-            let fromLang, toLang, originalLangFlag, translatedLangFlag;
-            
-            if (mode === 'en-ja') {
-                fromLang = 'en';
-                toLang = 'ja';
-                originalLangFlag = '🇺🇸';
-                translatedLangFlag = '🇯🇵';
-            } else if (mode === 'ja-en') {
-                fromLang = 'ja';
-                toLang = 'en';
-                originalLangFlag = '🇯🇵';
-                translatedLangFlag = '🇺🇸';
-            }
-            
-            translation = await this.translateText(text, fromLang, toLang);
+            const translation = await this.translateText(text, sourceLang, targetLang);
             
             if (translation) {
                 const translationItem = {
@@ -518,37 +574,46 @@ class MeaoCat {
                     translated: translation,
                     timestamp: new Date().toLocaleTimeString(),
                     id: Date.now(),
-                    originalLangFlag: originalLangFlag,
-                    translatedLangFlag: translatedLangFlag
+                    originalLangFlag: this.getFlag(sourceLang),
+                    translatedLangFlag: this.getFlag(targetLang)
                 };
                 
-                this.translationResults[mode].unshift(translationItem);
+                this.translationResults.unshift(translationItem);
                 
-                // Keep only last 20 translations per mode
-                if (this.translationResults[mode].length > 20) {
-                    this.translationResults[mode] = this.translationResults[mode].slice(0, 20);
+                // Keep only last 20 translations
+                if (this.translationResults.length > 20) {
+                    this.translationResults = this.translationResults.slice(0, 20);
                 }
                 
-                this.updateTranslationDisplay(mode);
-                this.triggerBlink(); // Cat reacts to new translation
+                this.updateTranslationDisplay();
+                this.triggerBlink(); 
             }
         } catch (error) {
             console.error('Translation error:', error);
         }
     }
     
-    updateInterimTranscript(interimText, mode) {
-        const interimElement = document.getElementById(`interim-transcript-${mode}`);
+    getFlag(code) {
+        const flags = {
+            'en': '🇺🇸', 'ja': '🇯🇵', 'es': '🇪🇸', 'fr': '🇫🇷',
+            'de': '🇩🇪', 'it': '🇮🇹', 'ko': '🇰🇷', 'zh': '🇨🇳',
+            'ru': '🇷🇺', 'pt': '🇵🇹'
+        };
+        return flags[code] || '🏳️';
+    }
+    
+    updateInterimTranscript(interimText) {
+        const interimElement = document.getElementById('interim-transcript');
         if (interimElement) {
             interimElement.textContent = interimText;
         }
     }
     
-    updateTranslationDisplay(mode) {
-        const translationList = document.getElementById(`translation-list-${mode}`);
+    updateTranslationDisplay() {
+        const translationList = document.getElementById('translation-list');
         if (!translationList) return;
         
-        const translations = this.translationResults[mode] || [];
+        const translations = this.translationResults || [];
         const translationsHTML = translations.map(item => `
             <div class="translation-item" data-id="${item.id}">
                 <div class="translation-original">
@@ -561,90 +626,68 @@ class MeaoCat {
                     "${item.translated}"
                 </div>
                 <div class="translation-time">${item.timestamp}</div>
-                <button class="remove-translation" onclick="window.meaoCat.removeTranslation(${item.id}, '${mode}')">×</button>
+                <button class="remove-translation" onclick="window.meaoCat.removeTranslation(${item.id})">×</button>
             </div>
         `).join('');
         
         translationList.innerHTML = translationsHTML;
     }
     
-    removeTranslation(id, mode) {
-        if (this.translationResults[mode]) {
-            this.translationResults[mode] = this.translationResults[mode].filter(item => item.id !== id);
-            this.updateTranslationDisplay(mode);
-        }
+    removeTranslation(id) {
+        this.translationResults = this.translationResults.filter(item => item.id !== id);
+        this.updateTranslationDisplay();
     }
     
-    clearAllTranslations(mode) {
+    clearAllTranslations() {
         if (confirm('Clear all translations?')) {
-            if (mode && this.translationResults[mode]) {
-                this.translationResults[mode] = [];
-                this.updateTranslationDisplay(mode);
-            }
+            this.translationResults = [];
+            this.updateTranslationDisplay();
         }
     }
     
-    showTranslationPanel(mode) {
-        // Hide all panels first
-        const panels = ['en-ja', 'ja-en'];
-        panels.forEach(panelMode => {
-            const panel = document.getElementById(`translation-panel-${panelMode}`);
-            if (panel) {
-                panel.classList.remove('show');
-            }
-        });
-        
-        // Show the requested panel
-        const panel = document.getElementById(`translation-panel-${mode}`);
+    showTranslationPanel() {
+        const panel = document.getElementById('translation-panel');
         if (panel) {
             panel.classList.add('show');
+            
+            // Update title
+            const title = document.getElementById('translation-panel-title');
+            if (title) {
+                title.textContent = `🌐 Live Translation (${this.getLanguageName(this.sourceLangSelect.value)} → ${this.getLanguageName(this.targetLangSelect.value)})`;
+            }
         }
     }
     
     hideTranslationPanel() {
-        const panels = ['en-ja', 'ja-en'];
-        panels.forEach(mode => {
-            const panel = document.getElementById(`translation-panel-${mode}`);
-            if (panel) {
-                panel.classList.remove('show');
-            }
-        });
+        const panel = document.getElementById('translation-panel');
+        if (panel) {
+            panel.classList.remove('show');
+        }
     }
     
     updateVoiceUI() {
-        const voiceBtnEnJa = document.getElementById('voice-translation-btn');
-        const voiceBtnJaEn = document.getElementById('voice-translation-btn-ja');
+        const voiceBtn = document.getElementById('voice-translation-btn');
         const statusIndicator = document.getElementById('voice-status');
         
-        // Update EN→JA button
-        if (voiceBtnEnJa) {
-            if (this.isTranslationMode && this.currentTranslationMode === 'en-ja') {
-                voiceBtnEnJa.classList.add('active');
-                voiceBtnEnJa.innerHTML = this.isListening ? '🔴 Stop EN→JA' : '⏸️ EN→JA Active';
+        if (voiceBtn) {
+            if (this.isTranslationMode) {
+                voiceBtn.classList.add('active');
+                voiceBtn.innerHTML = this.isListening ? '🔴 Stop Translation' : '⏸️ Translation Active';
             } else {
-                voiceBtnEnJa.classList.remove('active');
-                voiceBtnEnJa.innerHTML = '<span>🎤</span> EN→JA Translation';
-            }
-        }
-        
-        // Update JA→EN button
-        if (voiceBtnJaEn) {
-            if (this.isTranslationMode && this.currentTranslationMode === 'ja-en') {
-                voiceBtnJaEn.classList.add('active');
-                voiceBtnJaEn.innerHTML = this.isListening ? '🔴 Stop JA→EN' : '⏸️ JA→EN Active';
-            } else {
-                voiceBtnJaEn.classList.remove('active');
-                voiceBtnJaEn.innerHTML = '<span>🎌</span> JA→EN Translation';
+                voiceBtn.classList.remove('active');
+                voiceBtn.innerHTML = '<span>🎤</span> Start Translation';
             }
         }
         
         // Update status indicator
         if (statusIndicator) {
             if (this.isTranslationMode) {
-                const modeLabel = this.currentTranslationMode === 'en-ja' ? 'English→Japanese' : 'Japanese→English';
+                const sourceName = this.getLanguageName(this.sourceLangSelect.value);
+                const targetName = this.getLanguageName(this.targetLangSelect.value);
+                
                 statusIndicator.innerHTML = this.isListening ? 
-                    `<span class="listening">🎤 Listening (${modeLabel})...</span>` : 
-                    `<span class="waiting">⏸️ ${modeLabel} Mode Active</span>`;
+                    `<span class="listening">🎤 Listening (${sourceName} → ${targetName})...</span>` : 
+                    `<span class="waiting">⏸️ Translation Mode Active</span>`;
                 statusIndicator.classList.add('active');
             } else {
                 statusIndicator.innerHTML = '<span class="inactive">🔇 Translation Off</span>';
@@ -832,7 +875,7 @@ class MeaoCat {
                         <ul>
                             <li>Checking the spelling</li>
                             <li>Using a different form of the word</li>
-                            <li>Searching in ${this.currentLanguage === 'en' ? 'Japanese' : 'English'} instead</li>
+                            <li>Switching the language</li>
                         </ul>
                     </div>
                 </div>
@@ -952,7 +995,7 @@ class MeaoCat {
                 <div class="history-item" onclick="window.meaoCat.searchWord('${item.word}', '${item.language}')">
                     <div class="history-word">${item.word}</div>
                     <div class="history-meta">
-                        <span class="language-tag">${item.language === 'en' ? 'EN' : 'JA'}</span>
+                        <span class="language-tag">${item.language.toUpperCase()}</span>
                         <span class="history-time">${new Date(item.timestamp).toLocaleDateString()}</span>
                     </div>
                 </div>
@@ -994,7 +1037,7 @@ class MeaoCat {
                 <div class="history-item" onclick="window.meaoCat.searchWord('${item.word}', '${item.language}')">
                     <div class="history-word">⭐ ${item.word}</div>
                     <div class="history-meta">
-                        <span class="language-tag">${item.language === 'en' ? 'EN' : 'JA'}</span>
+                        <span class="language-tag">${item.language.toUpperCase()}</span>
                         <span class="history-time">${new Date(item.timestamp).toLocaleDateString()}</span>
                     </div>
                 </div>
@@ -1019,17 +1062,10 @@ class MeaoCat {
     
     // Search for a specific word (used by history/bookmarks)
     async searchWord(word, language) {
-        this.currentLanguage = language;
-        this.updateLanguageButtons();
+        this.sourceLangSelect.value = language;
+        this.updatePlaceholder();
         this.searchInput.value = word;
         await this.handleSearch();
-    }
-    
-    updateLanguageButtons() {
-        this.langButtons.forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.lang === this.currentLanguage);
-        });
-        this.updatePlaceholder();
     }
     
     // Clear methods
